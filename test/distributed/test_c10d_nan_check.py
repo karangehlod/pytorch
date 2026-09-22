@@ -24,6 +24,7 @@ from c10d_backend_common import (
 )
 
 from torch._C._distributed_c10d import NanCheckHook
+from torch.testing._internal.common_distributed import disable_core_dumps
 from torch.testing._internal.common_utils import run_tests
 
 
@@ -45,6 +46,7 @@ class AbstractNanCheckHookTest(C10dBackendTest):
 
     def _assert_nan_detected(self, tensor):
         if self.device_type == "cuda":
+            disable_core_dumps()
             try:
                 dist.all_reduce(tensor)
                 torch.cuda.synchronize()
